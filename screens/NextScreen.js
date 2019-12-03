@@ -1,36 +1,24 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Container, Header, Body, Title} from 'native-base';
 
 class NextScreen extends React.Component {
   render() {
     return (
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>This page is Next.</Text>
-            </View>
+      <Container>
+        <Header>
+          <Body>
+            <Title>Reizo</Title>
+          </Body>
+        </Header>
+        <View style={styles.body}>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>This page is Next.</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+        </View>
+      </Container>
     );
   }
 }
