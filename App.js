@@ -32,7 +32,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 // import screens
 import Home from './screens/HomeScreen';
-import List from './screens/ListScreen';
+import Reizo from './screens/ReizoScreen';
 
 // Tab
 const Tab = createBottomTabNavigator(
@@ -45,8 +45,8 @@ const Tab = createBottomTabNavigator(
         ),
       }),
     },
-    List: {
-      screen: List,
+    Reizo: {
+      screen: Reizo,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
           <Icon name="list" color={tintColor} size={21} />
