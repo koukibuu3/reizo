@@ -27,23 +27,43 @@ import {
 import {createAppContainer} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
+// import {Icon} from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 // import screens
-import Home from './screens/Home';
-import List from './screens/List';
+import Home from './screens/HomeScreen';
+import List from './screens/ListScreen';
 
 // Tab
 const Tab = createBottomTabNavigator(
   {
-    Tab1: { screen: Home },
-    Tab2: { screen: List },
-  }
+    Home: {
+      screen: Home,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <Icon name="home" color={tintColor} size={24} />
+        ),
+      }),
+    },
+    List: {
+      screen: List,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <Icon name="list" color={tintColor} size={21} />
+        ),
+      }),
+    },
+  },
+  {
+    tabBarOptions: {
+      showLabel: true,
+    },
+  },
 );
 
 export default class App extends React.Component {
   render() {
     const Layout = createAppContainer(Tab);
-    return (
-      <Layout/>
-    );
+    return <Layout />;
   }
 }
