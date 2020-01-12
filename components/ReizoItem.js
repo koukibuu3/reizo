@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Body, Right, Icon, ListItem} from 'native-base';
 import moment from 'moment';
 
 import firebase from 'react-native-firebase';
 
 const ReizoItem = props => {
-  const {name, expirationDate} = props;
+  const {itemKey, name, expirationDate, onDelete} = props;
   const nowTimestamp = firebase.firestore.FieldValue.serverTimestamp();
   const expirationTimestamp = new Date(expirationDate.seconds * 1000);
 
@@ -31,7 +31,7 @@ const ReizoItem = props => {
   }
 
   return (
-    <ListItem icon>
+    <ListItem icon onPress={() => onDelete(itemKey)}>
       <Body>
         <Text>{name}</Text>
       </Body>

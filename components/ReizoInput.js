@@ -10,7 +10,7 @@ import {Item, Input, DatePicker} from 'native-base';
 
 import moment from 'moment';
 
-export default class ListInput extends Component {
+export default class ReizoInput extends Component {
   constructor(props) {
     super(props);
 

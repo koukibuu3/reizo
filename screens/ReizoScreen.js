@@ -54,6 +54,22 @@ export default class ListScreen extends React.Component {
 
     // onCollectionUpdateが呼ばれるので、ここではstateに渡さない
   };
+
+  _onDelete = itemKey => {
+    firebase
+      .firestore()
+      .collection('reizoes')
+      .doc(itemKey)
+      .delete()
+      .then(() => {
+        console.log('successfully deleted!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    // console.log(key);
+  };
+
   /**
    * Firestoreのコレクションが更新されたときのイベント
    */
@@ -104,7 +120,13 @@ export default class ListScreen extends React.Component {
           <List>
             <FlatList
               data={reizoes}
-              renderItem={({item}) => <ReizoItem {...item} />}
+              renderItem={({item}) => (
+                <ReizoItem
+                  onDelete={this._onDelete}
+                  itemKey={item.key}
+                  {...item}
+                />
+              )}
             />
           </List>
         </Content>
