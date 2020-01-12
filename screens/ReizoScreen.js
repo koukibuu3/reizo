@@ -13,6 +13,7 @@ import {
   List,
   ListItem,
 } from 'native-base';
+import Modal from 'react-native-modal';
 
 import firebase from 'react-native-firebase';
 
@@ -27,8 +28,13 @@ export default class ListScreen extends React.Component {
 
     this.state = {
       reizoes: [],
+      isModalVisible: false,
     };
   }
+
+  _toggleModal = () => {
+    this.setState({isModalVisible: !this.state.isModalVisible});
+  };
 
   componentDidMount() {
     // refの更新時イベントにonCollectionUpdateを登録
@@ -105,18 +111,29 @@ export default class ListScreen extends React.Component {
             <Title>リスト</Title>
           </Body>
           <Right>
-            <Button transparent>
+            <Button transparent onPress={this._toggleModal}>
               <Icon name="add" />
             </Button>
           </Right>
         </Header>
 
-        <Content>
-          <View style={styles.container}>
-            <View style={styles.main}>
-              <ReizoInput onSubmit={this._onSubmit} />
+        <Modal isVisible={this.state.isModalVisible}>
+          <View style={styles.modal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalHeaderText} onPress={this._toggleModal}>
+                閉じる
+              </Text>
+            </View>
+            <View style={styles.modalBody}>
+              <ReizoInput
+                onSubmit={this._onSubmit}
+                toggleModal={this._toggleModal}
+              />
             </View>
           </View>
+        </Modal>
+
+        <Content>
           <List>
             <FlatList
               data={reizoes}
@@ -136,22 +153,23 @@ export default class ListScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  modalHeader: {
     flex: 1,
-    backgroundColor: '#333',
+    paddingTop: 10,
+    height: 20,
+  },
+  modalHeaderText: {
+    textAlign: 'left',
+    color: '#7f8c8d',
+  },
+  modalBody: {
+    flex: 4,
     alignItems: 'center',
   },
-  main: {
-    flex: 1,
-    maxWidth: 400,
+  modal: {
+    justifyContent: 'center',
     alignItems: 'center',
-  },
-  reizoListContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  reizoList: {
-    paddingLeft: 10,
-    paddingRight: 10,
+    backgroundColor: '#fff',
+    height: 120,
   },
 });

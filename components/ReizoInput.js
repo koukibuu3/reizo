@@ -6,7 +6,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-import {Item, Input, DatePicker} from 'native-base';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import moment from 'moment';
 
@@ -19,9 +19,8 @@ export default class ReizoInput extends Component {
     this.state = {
       name: '',
       expirationDate: new Date(),
+      isDateTimePickerVisible: false,
     };
-    // this.state = {chosenDate: new Date()};
-    // this._setDate = this._setDate.bind(this);
   }
 
   /**
@@ -54,6 +53,38 @@ export default class ReizoInput extends Component {
       name: '',
       expirationDate: new Date(),
     });
+
+    this._toggleModal();
+  };
+
+  /**
+   * モーダルを閉じる処理
+   */
+  _toggleModal = () => {
+    this.props.toggleModal();
+  };
+
+  /**
+   * datepickerを表示する処理
+   */
+  _showDateTimePicker = () => {
+    this.setState({isDateTimePickerVisible: true});
+  };
+
+  /**
+   * datepickerを非表示にする処理
+   */
+  _hideDateTimePicker = () => {
+    this.setState({isDateTimePickerVisible: false});
+  };
+
+  /**
+   * 日付決定時の処理
+   */
+  _handleDatePicked = date => {
+    this._handleDateChange(date);
+    console.log('A date has been picked: ', date);
+    this._hideDateTimePicker();
   };
 
   render() {
@@ -65,24 +96,18 @@ export default class ReizoInput extends Component {
           value={this.state.name}
           onChangeText={this._handleTextChange}
         />
-        <DatePicker
-          defaultDate={now}
-          minimumDate={moment(now)
-            .subtract(2, 'months')
-            .toDate()}
-          maximumDate={moment(now)
-            .add(2, 'years')
-            .toDate()}
-          locale={'ja'}
-          timeZoneOffsetInMinutes={undefined}
-          modalTransparent={false}
-          animationType={'fade'}
-          androidMode={'default'}
-          placeHolderText="日付を選択"
-          textStyle={{color: 'skyblue'}}
-          placeHolderTextStyle={{color: '#d3d3d3'}}
-          onDateChange={this._handleDateChange}
-          disabled={false}
+        <Text style={styles.datepicker} onPress={this._showDateTimePicker}>
+          {moment(this.state.expirationDate).format('YYYY/MM/DD')}
+        </Text>
+        <DateTimePicker
+          isVisible={this.state.isDateTimePickerVisible}
+          onConfirm={this._handleDatePicked}
+          onCancel={this._hideDateTimePicker}
+          mode="date"
+          locale="ja_JP"
+          titleIOS="賞味期限"
+          confirmTextIOS="確定"
+          cancelTextIOS="キャンセル"
         />
         <TouchableOpacity style={styles.button} onPress={this._onSubmit}>
           <Text style={styles.buttonText}>追加</Text>
@@ -98,9 +123,20 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   textInput: {
-    flex: 3,
+    flex: 4,
     backgroundColor: '#FFF',
+    borderBottomColor: '#000',
+    borderBottomWidth: 0.5,
     marginRight: 5,
+  },
+  datepicker: {
+    flex: 2,
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    color: '#008080',
+    fontWeight: '700',
   },
   button: {
     flex: 1,
