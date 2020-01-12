@@ -22,28 +22,61 @@ import ReizoItem from '../components/ReizoItem';
 export default class ListScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.ref = firebase.firestore().collection('reizoes');
+    this.unsubscribe = null;
 
     this.state = {
-      list: [],
+      reizoes: [],
     };
   }
 
-  _onPress = text => {
-    const list = [].concat(this.state.list);
+  componentDidMount() {
+    // refの更新時イベントにonCollectionUpdateを登録
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
 
-    list.push({
-      key: Date.now(),
-      text: text,
-      done: false,
+  compoentWillunmount() {
+    this.unsubscribe();
+  }
+
+  _onSubmit = reizo => {
+    const reizoes = [];
+
+    reizoes.push({
+      name: reizo.name,
+      creation_date: new Date(),
+      expiration_date: reizo.expirationDate,
+    });
+
+    reizoes.forEach(reizo => {
+      this.ref.add(reizo);
+    });
+
+    // onCollectionUpdateが呼ばれるので、ここではstateに渡さない
+  };
+  /**
+   * Firestoreのコレクションが更新されたときのイベント
+   */
+  onCollectionUpdate = querySnapshot => {
+    // docsのdataからreizoesを取得
+    const reizoes = [];
+    querySnapshot.forEach(doc => {
+      const {name, creation_date, expiration_date} = doc.data();
+      reizoes.push({
+        key: doc.id,
+        name: name,
+        creationDate: creation_date,
+        expirationDate: expiration_date,
+      });
     });
 
     this.setState({
-      list,
+      reizoes,
     });
   };
 
   render() {
-    const {list} = this.state;
+    const {reizoes} = this.state;
     return (
       <Container>
         <Header>
@@ -65,12 +98,12 @@ export default class ListScreen extends React.Component {
         <Content>
           <View style={styles.container}>
             <View style={styles.main}>
-              <ReizoInput onPress={this._onPress} />
+              <ReizoInput onSubmit={this._onSubmit} />
             </View>
           </View>
           <List>
             <FlatList
-              data={list}
+              data={reizoes}
               renderItem={({item}) => <ReizoItem {...item} />}
             />
           </List>

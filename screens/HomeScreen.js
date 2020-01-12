@@ -28,7 +28,7 @@ export default class HomeScreen extends React.Component {
           </Body>
           <Right>
             <Button transparent>
-              <Icon name="settings" />
+              <Icon name="refresh" />
             </Button>
           </Right>
         </Header>
